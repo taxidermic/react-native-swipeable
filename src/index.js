@@ -84,6 +84,8 @@ export default class Swipeable extends PureComponent {
     swipeStartMinLeftEdgeClearance: PropTypes.number,
     swipeStartMinRightEdgeClearance: PropTypes.number,
     disable: PropTypes.bool,
+    bounceOnMount: PropTypes.bool,
+    bounceDuration: PropTypes.number,
 
     // styles
     style: ViewPropTypes.style,
@@ -165,6 +167,7 @@ export default class Swipeable extends PureComponent {
     swipeStartMinLeftEdgeClearance: 0,
     swipeStartMinRightEdgeClearance: 0,
     bounceOnMount: false,
+    bounceDuration: 1000,
     disable: false
   };
 
@@ -253,10 +256,14 @@ export default class Swipeable extends PureComponent {
     const { pan } = this.state;
     pan.flattenOffset();
 
-    const { swipeReleaseAnimationFn, swipeReleaseAnimationConfig } = this.props;
+    const {
+      swipeReleaseAnimationFn,
+      swipeReleaseAnimationConfig,
+      bounceDuration
+    } = this.props;
     Animated.timing(pan, {
       toValue,
-      duration: 250,
+      duration: bounceDuration,
       easing: Easing.elastic(0.5)
     }).start(() =>
       this.recenter(
