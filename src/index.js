@@ -4,6 +4,7 @@ import {
   Animated,
   Dimensions,
   Easing,
+  InteractionManager,
   PanResponder,
   StyleSheet,
   View,
@@ -192,7 +193,9 @@ export default class Swipeable extends PureComponent {
 
   componentDidMount() {
     if (this.props.bounceOnMount) {
-      setTimeout(this._bounceOnMount, 700);
+      InteractionManager.runAfterInteractions(() =>
+        setTimeout(this._bounceOnMount, 700)
+      );
     }
   }
 
