@@ -1,6 +1,6 @@
 {
   "name": "react-native-swipeable-row",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "A powerful React Native swipe component based on @jshanson7 package",
   "main": "src/index.js",
   "scripts": {
@@ -23,8 +23,8 @@
     "eslint-plugin-react": "^6.8.0"
   },
   "peerDependencies": {
-    "react": ">=15.2.0",
-    "react-native": ">=0.44.0"
+    "react": ">=16.0.0",
+    "react-native": ">=0.63.0"
   },
   "repository": {
     "type": "git",
