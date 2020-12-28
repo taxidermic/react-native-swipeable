@@ -7,13 +7,13 @@ import {
   InteractionManager,
   PanResponder,
   StyleSheet,
-  View,
+  View,TouchableWithoutFeedback,
   ViewPropTypes
 } from "react-native";
 import { PropTypes } from "prop-types";
 /* eslint-enable import/no-unresolved, import/extensions */
 
-function noop() {}
+function noop() { }
 
 export default class Swipeable extends PureComponent {
   static propTypes = {
@@ -305,7 +305,7 @@ export default class Swipeable extends PureComponent {
         gestureStartX >= swipeStartMinLeftEdgeClearance) &&
       (swipeStartMinRightEdgeClearance === 0 ||
         gestureStartX <=
-          Dimensions.get("window").width - swipeStartMinRightEdgeClearance)
+        Dimensions.get("window").width - swipeStartMinRightEdgeClearance)
     );
   };
 
@@ -768,6 +768,8 @@ export default class Swipeable extends PureComponent {
       rightContainerStyle,
       rightContent,
       style,
+      onPress,
+      onLongPress,
       ...props
     } = this.props;
     const { pan, width } = this.state;
@@ -787,44 +789,47 @@ export default class Swipeable extends PureComponent {
     ];
 
     return (
-      <View
-        onLayout={this._handleLayout}
-        style={[styles.container, style]}
-        {...this._panResponder.panHandlers}
-        {...props}
-      >
-        {canSwipeRight && (
-          <Animated.View
-            style={[
-              { transform, marginLeft: -width, width },
-              leftContainerStyle
-            ]}
-          >
-            {leftContent || this._renderButtons(leftButtons, true)}
-          </Animated.View>
-        )}
-        <Animated.View
-          style={[{ transform }, styles.content, contentContainerStyle]}
+      <TouchableWithoutFeedback onPress={onPress} onLongPress={onLongPress} style={styles.container}>
+        <View
+          onLayout={this._handleLayout}
+          style={[styles.container, style]}
+          {...this._panResponder.panHandlers}
+          {...props}
         >
-          {children}
-        </Animated.View>
-        {canSwipeLeft && (
+          {canSwipeRight && (
+            <Animated.View
+              style={[
+                { transform, marginLeft: -width, width },
+                leftContainerStyle
+              ]}
+            >
+              {leftContent || this._renderButtons(leftButtons, true)}
+            </Animated.View>
+          )}
           <Animated.View
-            style={[
-              { transform, marginRight: -width, width },
-              rightContainerStyle
-            ]}
+            style={[{ transform }, styles.content, contentContainerStyle]}
           >
-            {rightContent || this._renderButtons(rightButtons, false)}
+            {children}
           </Animated.View>
-        )}
-      </View>
+          {canSwipeLeft && (
+            <Animated.View
+              style={[
+                { transform, marginRight: -width, width },
+                rightContainerStyle
+              ]}
+            >
+              {rightContent || this._renderButtons(rightButtons, false)}
+            </Animated.View>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: "row"
   },
   content: {
