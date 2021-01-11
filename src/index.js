@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved, import/extensions */
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react'
 import {
   Animated,
   Dimensions,
@@ -7,10 +7,10 @@ import {
   InteractionManager,
   PanResponder,
   StyleSheet,
-  View,TouchableWithoutFeedback,
-  ViewPropTypes
-} from "react-native";
-import { PropTypes } from "prop-types";
+  View, TouchableWithoutFeedback,
+  ViewPropTypes,
+} from 'react-native'
+import { PropTypes } from 'prop-types'
 /* eslint-enable import/no-unresolved, import/extensions */
 
 function noop() { }
@@ -94,7 +94,7 @@ export default class Swipeable extends PureComponent {
     leftButtonContainerStyle: ViewPropTypes.style,
     rightContainerStyle: ViewPropTypes.style,
     rightButtonContainerStyle: ViewPropTypes.style,
-    contentContainerStyle: ViewPropTypes.style
+    contentContainerStyle: ViewPropTypes.style,
   };
 
   static defaultProps = {
@@ -170,7 +170,7 @@ export default class Swipeable extends PureComponent {
     swipeStartMinRightEdgeClearance: 0,
     bounceOnMount: false,
     bounceDuration: 1000,
-    disable: false
+    disable: false,
   };
 
   state = {
@@ -182,34 +182,33 @@ export default class Swipeable extends PureComponent {
     leftButtonsOpen: false,
     rightActionActivated: false,
     rightButtonsActivated: false,
-    rightButtonsOpen: false
+    rightButtonsOpen: false,
   };
 
   UNSAFE_componentWillMount() {
-    const { onPanAnimatedValueRef, onRef } = this.props;
+    const { onPanAnimatedValueRef, onRef } = this.props
 
-    onRef(this);
-    onPanAnimatedValueRef(this.state.pan);
+    onRef(this)
+    onPanAnimatedValueRef(this.state.pan)
   }
 
   componentDidMount() {
     if (this.props.bounceOnMount) {
       InteractionManager.runAfterInteractions(() =>
-        setTimeout(this._bounceOnMount, 700)
-      );
+        setTimeout(this._bounceOnMount, 700))
     }
   }
 
   componentWillUnmount() {
-    this._unmounted = true;
+    this._unmounted = true
   }
 
   recenter = (
     animationFn = this.props.swipeReleaseAnimationFn,
     animationConfig = this.props.swipeReleaseAnimationConfig,
-    onDone
+    onDone,
   ) => {
-    const { pan } = this.state;
+    const { pan } = this.state
 
     this.setState({
       lastOffset: { x: 0, y: 0 },
@@ -218,53 +217,53 @@ export default class Swipeable extends PureComponent {
       leftButtonsOpen: false,
       rightActionActivated: false,
       rightButtonsActivated: false,
-      rightButtonsOpen: false
-    });
+      rightButtonsOpen: false,
+    })
 
-    pan.flattenOffset();
+    pan.flattenOffset()
 
-    animationFn(pan, animationConfig).start(onDone);
+    animationFn(pan, animationConfig).start(onDone)
   };
 
   _bounceOnMount = () => {
     if (this._canSwipeLeft()) {
-      this.bounceRight(this.bounceLeft);
+      this.bounceRight(this.bounceLeft)
     } else if (this._canSwipeRight()) {
-      this.bounceLeft();
+      this.bounceLeft()
     }
   };
 
-  bounceRight = onDone => {
+  bounceRight = (onDone) => {
     if (this._canSwipeLeft()) {
       this.setState({
         rightActionActivated: true,
         rightButtonsActivated: true,
-        rightButtonsOpen: true
-      });
-      this._bounce({ x: -50, y: 0 }, onDone);
+        rightButtonsOpen: true,
+      })
+      this._bounce({ x: -50, y: 0 }, onDone)
     }
   };
 
-  bounceLeft = onDone => {
+  bounceLeft = (onDone) => {
     if (this._canSwipeRight()) {
       this.setState({
         leftActionActivated: true,
         leftButtonsActivated: true,
-        leftButtonsOpen: true
-      });
-      this._bounce({ x: 50, y: 0 }, onDone);
+        leftButtonsOpen: true,
+      })
+      this._bounce({ x: 50, y: 0 }, onDone)
     }
   };
 
   _bounce = (toValue, onDone) => {
-    const { pan } = this.state;
-    pan.flattenOffset();
+    const { pan } = this.state
+    pan.flattenOffset()
 
     const {
       swipeReleaseAnimationFn,
       swipeReleaseAnimationConfig,
-      bounceDuration
-    } = this.props;
+      bounceDuration,
+    } = this.props
     Animated.timing(pan, {
       toValue,
       duration: bounceDuration,
@@ -274,9 +273,8 @@ export default class Swipeable extends PureComponent {
       this.recenter(
         swipeReleaseAnimationFn,
         swipeReleaseAnimationConfig,
-        () => onDone && onDone()
-      )
-    );
+        () => onDone && onDone(),
+      ))
   };
 
   _unmounted = false;
@@ -286,43 +284,43 @@ export default class Swipeable extends PureComponent {
       null,
       {
         dx: this.state.pan.x,
-        dy: this.state.pan.y
-      }
+        dy: this.state.pan.y,
+      },
     ],
-    { useNativeDriver: false }
+    { useNativeDriver: false },
   );
 
   _handleMoveShouldSetPanResponder = (event, gestureState) => {
     const {
       swipeStartMinDistance,
       swipeStartMinLeftEdgeClearance,
-      swipeStartMinRightEdgeClearance
-    } = this.props;
-    const gestureStartX = gestureState.moveX - gestureState.dx;
+      swipeStartMinRightEdgeClearance,
+    } = this.props
+    const gestureStartX = gestureState.moveX - gestureState.dx
     return (
-      Math.abs(gestureState.dx) > swipeStartMinDistance &&
-      (swipeStartMinLeftEdgeClearance === 0 ||
-        gestureStartX >= swipeStartMinLeftEdgeClearance) &&
-      (swipeStartMinRightEdgeClearance === 0 ||
-        gestureStartX <=
-        Dimensions.get("window").width - swipeStartMinRightEdgeClearance)
-    );
+      Math.abs(gestureState.dx) > swipeStartMinDistance
+      && (swipeStartMinLeftEdgeClearance === 0
+        || gestureStartX >= swipeStartMinLeftEdgeClearance)
+      && (swipeStartMinRightEdgeClearance === 0
+        || gestureStartX
+        <= Dimensions.get('window').width - swipeStartMinRightEdgeClearance)
+    )
   };
 
   _handlePanResponderStart = (event, gestureState) => {
     if (this.props.disable) {
-      return;
+      return
     }
 
-    const { lastOffset, pan } = this.state;
+    const { lastOffset, pan } = this.state
 
-    pan.setOffset(lastOffset);
-    this.props.onSwipeStart(event, gestureState, this);
+    pan.setOffset(lastOffset)
+    this.props.onSwipeStart(event, gestureState, this)
   };
 
   _handlePanResponderMove = (event, gestureState) => {
     if (this.props.disable) {
-      return;
+      return
     }
 
     const {
@@ -338,116 +336,115 @@ export default class Swipeable extends PureComponent {
       onRightActionDeactivate,
       onRightButtonsActivate,
       onRightButtonsDeactivate,
-      onSwipeMove
-    } = this.props;
+      onSwipeMove,
+    } = this.props
     const {
       lastOffset,
       leftActionActivated,
       leftButtonsActivated,
       rightActionActivated,
-      rightButtonsActivated
-    } = this.state;
-    const { dx, vx } = gestureState;
-    const x = dx + lastOffset.x;
-    const canSwipeRight = this._canSwipeRight();
-    const canSwipeLeft = this._canSwipeLeft();
-    const hasLeftButtons = this._hasLeftButtons();
-    const hasRightButtons = this._hasRightButtons();
-    const isSwipingLeft = vx < 0;
-    const isSwipingRight = vx > 0;
-    let nextLeftActionActivated = leftActionActivated;
-    let nextLeftButtonsActivated = leftButtonsActivated;
-    let nextRightActionActivated = rightActionActivated;
-    let nextRightButtonsActivated = rightButtonsActivated;
+      rightButtonsActivated,
+    } = this.state
+    const { dx, vx } = gestureState
+    const x = dx + lastOffset.x
+    const canSwipeRight = this._canSwipeRight()
+    const canSwipeLeft = this._canSwipeLeft()
+    const hasLeftButtons = this._hasLeftButtons()
+    const hasRightButtons = this._hasRightButtons()
+    const isSwipingLeft = vx < 0
+    const isSwipingRight = vx > 0
+    let nextLeftActionActivated = leftActionActivated
+    let nextLeftButtonsActivated = leftButtonsActivated
+    let nextRightActionActivated = rightActionActivated
+    let nextRightButtonsActivated = rightButtonsActivated
 
-    this._handlePan(event, gestureState);
-    onSwipeMove(event, gestureState, this);
+    this._handlePan(event, gestureState)
+    onSwipeMove(event, gestureState, this)
 
     if (
-      !leftActionActivated &&
-      canSwipeRight &&
-      x >= leftActionActivationDistance
+      !leftActionActivated
+      && canSwipeRight
+      && x >= leftActionActivationDistance
     ) {
-      nextLeftActionActivated = true;
-      onLeftActionActivate(event, gestureState, this);
+      nextLeftActionActivated = true
+      onLeftActionActivate(event, gestureState, this)
     }
 
     if (
-      leftActionActivated &&
-      canSwipeRight &&
-      x < leftActionActivationDistance
+      leftActionActivated
+      && canSwipeRight
+      && x < leftActionActivationDistance
     ) {
-      nextLeftActionActivated = false;
-      onLeftActionDeactivate(event, gestureState, this);
+      nextLeftActionActivated = false
+      onLeftActionDeactivate(event, gestureState, this)
     }
 
     if (
-      !rightActionActivated &&
-      canSwipeLeft &&
-      x <= -rightActionActivationDistance
+      !rightActionActivated
+      && canSwipeLeft
+      && x <= -rightActionActivationDistance
     ) {
-      nextRightActionActivated = true;
-      onRightActionActivate(event, gestureState, this);
+      nextRightActionActivated = true
+      onRightActionActivate(event, gestureState, this)
     }
 
     if (
-      rightActionActivated &&
-      canSwipeLeft &&
-      x > -rightActionActivationDistance
+      rightActionActivated
+      && canSwipeLeft
+      && x > -rightActionActivationDistance
     ) {
-      nextRightActionActivated = false;
-      onRightActionDeactivate(event, gestureState, this);
+      nextRightActionActivated = false
+      onRightActionDeactivate(event, gestureState, this)
     }
 
     if (
-      !leftButtonsActivated &&
-      hasLeftButtons &&
-      !isSwipingLeft &&
-      x >= leftButtonsActivationDistance
+      !leftButtonsActivated
+      && hasLeftButtons
+      && !isSwipingLeft
+      && x >= leftButtonsActivationDistance
     ) {
-      nextLeftButtonsActivated = true;
-      onLeftButtonsActivate(event, gestureState, this);
+      nextLeftButtonsActivated = true
+      onLeftButtonsActivate(event, gestureState, this)
     }
 
     if (leftButtonsActivated && hasLeftButtons && isSwipingLeft) {
-      nextLeftButtonsActivated = false;
-      onLeftButtonsDeactivate(event, gestureState, this);
+      nextLeftButtonsActivated = false
+      onLeftButtonsDeactivate(event, gestureState, this)
     }
 
     if (
-      !rightButtonsActivated &&
-      hasRightButtons &&
-      !isSwipingRight &&
-      x <= -rightButtonsActivationDistance
+      !rightButtonsActivated
+      && hasRightButtons
+      && !isSwipingRight
+      && x <= -rightButtonsActivationDistance
     ) {
-      nextRightButtonsActivated = true;
-      onRightButtonsActivate(event, gestureState, this);
+      nextRightButtonsActivated = true
+      onRightButtonsActivate(event, gestureState, this)
     }
 
     if (rightButtonsActivated && hasRightButtons && isSwipingRight) {
-      nextRightButtonsActivated = false;
-      onRightButtonsDeactivate(event, gestureState, this);
+      nextRightButtonsActivated = false
+      onRightButtonsDeactivate(event, gestureState, this)
     }
 
-    const needsUpdate =
-      nextLeftActionActivated !== leftActionActivated ||
-      nextLeftButtonsActivated !== leftButtonsActivated ||
-      nextRightActionActivated !== rightActionActivated ||
-      nextRightButtonsActivated !== rightButtonsActivated;
+    const needsUpdate = nextLeftActionActivated !== leftActionActivated
+      || nextLeftButtonsActivated !== leftButtonsActivated
+      || nextRightActionActivated !== rightActionActivated
+      || nextRightButtonsActivated !== rightButtonsActivated
 
     if (needsUpdate) {
       this.setState({
         leftActionActivated: nextLeftActionActivated,
         leftButtonsActivated: nextLeftButtonsActivated,
         rightActionActivated: nextRightActionActivated,
-        rightButtonsActivated: nextRightButtonsActivated
-      });
+        rightButtonsActivated: nextRightButtonsActivated,
+      })
     }
   };
 
   _handlePanResponderEnd = (event, gestureState) => {
     if (this.props.disable) {
-      return;
+      return
     }
 
     const {
@@ -459,8 +456,8 @@ export default class Swipeable extends PureComponent {
       onRightActionDeactivate,
       onRightButtonsOpenRelease,
       onRightButtonsCloseRelease,
-      onSwipeRelease
-    } = this.props;
+      onSwipeRelease,
+    } = this.props
     const {
       leftActionActivated,
       leftButtonsOpen,
@@ -468,53 +465,53 @@ export default class Swipeable extends PureComponent {
       rightActionActivated,
       rightButtonsOpen,
       rightButtonsActivated,
-      pan
-    } = this.state;
-    const animationFn = this._getReleaseAnimationFn();
-    const animationConfig = this._getReleaseAnimationConfig();
+      pan,
+    } = this.state
+    const animationFn = this._getReleaseAnimationFn()
+    const animationConfig = this._getReleaseAnimationConfig()
 
-    onSwipeRelease(event, gestureState, this);
+    onSwipeRelease(event, gestureState, this)
 
     if (leftActionActivated) {
-      onLeftActionRelease(event, gestureState, this);
+      onLeftActionRelease(event, gestureState, this)
     }
 
     if (rightActionActivated) {
-      onRightActionRelease(event, gestureState, this);
+      onRightActionRelease(event, gestureState, this)
     }
 
     if (leftButtonsActivated && !leftButtonsOpen) {
-      onLeftButtonsOpenRelease(event, gestureState, this);
+      onLeftButtonsOpenRelease(event, gestureState, this)
     }
 
     if (!leftButtonsActivated && leftButtonsOpen) {
-      onLeftButtonsCloseRelease(event, gestureState, this);
+      onLeftButtonsCloseRelease(event, gestureState, this)
     }
 
     if (rightButtonsActivated && !rightButtonsOpen) {
-      onRightButtonsOpenRelease(event, gestureState, this);
+      onRightButtonsOpenRelease(event, gestureState, this)
     }
 
     if (!rightButtonsActivated && rightButtonsOpen) {
-      onRightButtonsCloseRelease(event, gestureState, this);
+      onRightButtonsCloseRelease(event, gestureState, this)
     }
 
     this.setState({
       lastOffset: {
         x: animationConfig.toValue.x,
-        y: animationConfig.toValue.y
+        y: animationConfig.toValue.y,
       },
       leftActionActivated: false,
       rightActionActivated: false,
       leftButtonsOpen: leftButtonsActivated,
-      rightButtonsOpen: rightButtonsActivated
-    });
+      rightButtonsOpen: rightButtonsActivated,
+    })
 
-    pan.flattenOffset();
+    pan.flattenOffset()
 
     animationFn(pan, animationConfig).start(() => {
       if (this._unmounted) {
-        return;
+        return
       }
 
       const {
@@ -524,37 +521,37 @@ export default class Swipeable extends PureComponent {
         onRightActionComplete,
         onRightButtonsOpenComplete,
         onRightButtonsCloseComplete,
-        onSwipeComplete
-      } = this.props;
+        onSwipeComplete,
+      } = this.props
 
-      onSwipeComplete(event, gestureState, this);
+      onSwipeComplete(event, gestureState, this)
 
       if (leftActionActivated) {
-        onLeftActionComplete(event, gestureState, this);
-        onLeftActionDeactivate(event, gestureState, this);
+        onLeftActionComplete(event, gestureState, this)
+        onLeftActionDeactivate(event, gestureState, this)
       }
 
       if (rightActionActivated) {
-        onRightActionComplete(event, gestureState, this);
-        onRightActionDeactivate(event, gestureState, this);
+        onRightActionComplete(event, gestureState, this)
+        onRightActionDeactivate(event, gestureState, this)
       }
 
       if (leftButtonsActivated && !leftButtonsOpen) {
-        onLeftButtonsOpenComplete(event, gestureState, this);
+        onLeftButtonsOpenComplete(event, gestureState, this)
       }
 
       if (!leftButtonsActivated && leftButtonsOpen) {
-        onLeftButtonsCloseComplete(event, gestureState, this);
+        onLeftButtonsCloseComplete(event, gestureState, this)
       }
 
       if (rightButtonsActivated && !rightButtonsOpen) {
-        onRightButtonsOpenComplete(event, gestureState, this);
+        onRightButtonsOpenComplete(event, gestureState, this)
       }
 
       if (!rightButtonsActivated && rightButtonsOpen) {
-        onRightButtonsCloseComplete(event, gestureState, this);
+        onRightButtonsCloseComplete(event, gestureState, this)
       }
-    });
+    })
   };
 
   _panResponder = PanResponder.create({
@@ -564,33 +561,33 @@ export default class Swipeable extends PureComponent {
     onPanResponderMove: this._handlePanResponderMove,
     onPanResponderRelease: this._handlePanResponderEnd,
     onPanResponderTerminate: this._handlePanResponderEnd,
-    onPanResponderTerminationRequest: this._handlePanResponderEnd
+    onPanResponderTerminationRequest: this._handlePanResponderEnd,
   });
 
   _handleLayout = ({
     nativeEvent: {
-      layout: { width }
-    }
+      layout: { width },
+    },
   }) => this.setState({ width });
 
   _canSwipeRight() {
-    return this.props.leftContent || this._hasLeftButtons();
+    return this.props.leftContent || this._hasLeftButtons()
   }
 
   _canSwipeLeft() {
-    return this.props.rightContent || this._hasRightButtons();
+    return this.props.rightContent || this._hasRightButtons()
   }
 
   _hasLeftButtons() {
-    const { leftButtons, leftContent } = this.props;
+    const { leftButtons, leftContent } = this.props
 
-    return !leftContent && leftButtons && leftButtons.length;
+    return !leftContent && leftButtons && leftButtons.length
   }
 
   _hasRightButtons() {
-    const { rightButtons, rightContent } = this.props;
+    const { rightButtons, rightContent } = this.props
 
-    return !rightContent && rightButtons && rightButtons.length;
+    return !rightContent && rightButtons && rightButtons.length
   }
 
   _getReleaseAnimationFn() {
@@ -601,50 +598,50 @@ export default class Swipeable extends PureComponent {
       rightActionReleaseAnimationFn,
       rightButtonsOpenReleaseAnimationFn,
       rightButtonsCloseReleaseAnimationFn,
-      swipeReleaseAnimationFn
-    } = this.props;
+      swipeReleaseAnimationFn,
+    } = this.props
     const {
       leftActionActivated,
       leftButtonsActivated,
       leftButtonsOpen,
       rightActionActivated,
       rightButtonsActivated,
-      rightButtonsOpen
-    } = this.state;
+      rightButtonsOpen,
+    } = this.state
 
     if (leftActionActivated && leftActionReleaseAnimationFn) {
-      return leftActionReleaseAnimationFn;
+      return leftActionReleaseAnimationFn
     }
 
     if (rightActionActivated && rightActionReleaseAnimationFn) {
-      return rightActionReleaseAnimationFn;
+      return rightActionReleaseAnimationFn
     }
 
     if (leftButtonsActivated && leftButtonsOpenReleaseAnimationFn) {
-      return leftButtonsOpenReleaseAnimationFn;
+      return leftButtonsOpenReleaseAnimationFn
     }
 
     if (
-      !leftButtonsActivated &&
-      leftButtonsOpen &&
-      leftButtonsCloseReleaseAnimationFn
+      !leftButtonsActivated
+      && leftButtonsOpen
+      && leftButtonsCloseReleaseAnimationFn
     ) {
-      return leftButtonsCloseReleaseAnimationFn;
+      return leftButtonsCloseReleaseAnimationFn
     }
 
     if (rightButtonsActivated && rightButtonsOpenReleaseAnimationFn) {
-      return rightButtonsOpenReleaseAnimationFn;
+      return rightButtonsOpenReleaseAnimationFn
     }
 
     if (
-      !rightButtonsActivated &&
-      rightButtonsOpen &&
-      rightButtonsCloseReleaseAnimationFn
+      !rightButtonsActivated
+      && rightButtonsOpen
+      && rightButtonsCloseReleaseAnimationFn
     ) {
-      return rightButtonsCloseReleaseAnimationFn;
+      return rightButtonsCloseReleaseAnimationFn
     }
 
-    return swipeReleaseAnimationFn;
+    return swipeReleaseAnimationFn
   }
 
   _getReleaseAnimationConfig() {
@@ -659,23 +656,23 @@ export default class Swipeable extends PureComponent {
       rightButtonsOpenReleaseAnimationConfig,
       rightButtonsCloseReleaseAnimationConfig,
       rightButtonWidth,
-      swipeReleaseAnimationConfig
-    } = this.props;
+      swipeReleaseAnimationConfig,
+    } = this.props
     const {
       leftActionActivated,
       leftButtonsActivated,
       leftButtonsOpen,
       rightActionActivated,
       rightButtonsActivated,
-      rightButtonsOpen
-    } = this.state;
+      rightButtonsOpen,
+    } = this.state
 
     if (leftActionActivated && leftActionReleaseAnimationConfig) {
-      return leftActionReleaseAnimationConfig;
+      return leftActionReleaseAnimationConfig
     }
 
     if (rightActionActivated && rightActionReleaseAnimationConfig) {
-      return rightActionReleaseAnimationConfig;
+      return rightActionReleaseAnimationConfig
     }
 
     if (leftButtonsActivated) {
@@ -683,10 +680,10 @@ export default class Swipeable extends PureComponent {
         ...swipeReleaseAnimationConfig,
         toValue: {
           x: leftButtons.length * leftButtonWidth,
-          y: 0
+          y: 0,
         },
-        ...leftButtonsOpenReleaseAnimationConfig
-      };
+        ...leftButtonsOpenReleaseAnimationConfig,
+      }
     }
 
     if (rightButtonsActivated) {
@@ -694,67 +691,67 @@ export default class Swipeable extends PureComponent {
         ...swipeReleaseAnimationConfig,
         toValue: {
           x: rightButtons.length * rightButtonWidth * -1,
-          y: 0
+          y: 0,
         },
-        ...rightButtonsOpenReleaseAnimationConfig
-      };
+        ...rightButtonsOpenReleaseAnimationConfig,
+      }
     }
 
     if (
-      !leftButtonsActivated &&
-      leftButtonsOpen &&
-      leftButtonsCloseReleaseAnimationConfig
+      !leftButtonsActivated
+      && leftButtonsOpen
+      && leftButtonsCloseReleaseAnimationConfig
     ) {
-      return leftButtonsCloseReleaseAnimationConfig;
+      return leftButtonsCloseReleaseAnimationConfig
     }
 
     if (
-      !rightButtonsActivated &&
-      rightButtonsOpen &&
-      rightButtonsCloseReleaseAnimationConfig
+      !rightButtonsActivated
+      && rightButtonsOpen
+      && rightButtonsCloseReleaseAnimationConfig
     ) {
-      return rightButtonsCloseReleaseAnimationConfig;
+      return rightButtonsCloseReleaseAnimationConfig
     }
 
-    return swipeReleaseAnimationConfig;
+    return swipeReleaseAnimationConfig
   }
 
   _renderButtons(buttons, isLeftButtons) {
-    const { leftButtonContainerStyle, rightButtonContainerStyle } = this.props;
-    const { pan, width } = this.state;
-    const canSwipeLeft = this._canSwipeLeft();
-    const canSwipeRight = this._canSwipeRight();
-    const count = buttons.length;
-    const leftEnd = canSwipeLeft ? -width : 0;
-    const rightEnd = canSwipeRight ? width : 0;
-    const inputRange = isLeftButtons ? [0, rightEnd] : [leftEnd, 0];
+    const { leftButtonContainerStyle, rightButtonContainerStyle } = this.props
+    const { pan, width } = this.state
+    const canSwipeLeft = this._canSwipeLeft()
+    const canSwipeRight = this._canSwipeRight()
+    const count = buttons.length
+    const leftEnd = canSwipeLeft ? -width : 0
+    const rightEnd = canSwipeRight ? width : 0
+    const inputRange = isLeftButtons ? [0, rightEnd] : [leftEnd, 0]
 
     return buttons.map((buttonContent, index) => {
-      const outputMultiplier = -index / count;
+      const outputMultiplier = -index / count
       const outputRange = isLeftButtons
         ? [0, rightEnd * outputMultiplier]
-        : [leftEnd * outputMultiplier, 0];
+        : [leftEnd * outputMultiplier, 0]
       const transform = [
         {
           translateX: pan.x.interpolate({
             inputRange,
             outputRange,
-            extrapolate: "clamp"
-          })
-        }
-      ];
+            extrapolate: 'clamp',
+          }),
+        },
+      ]
       const buttonStyle = [
         StyleSheet.absoluteFill,
         { width, transform },
-        isLeftButtons ? leftButtonContainerStyle : rightButtonContainerStyle
-      ];
+        isLeftButtons ? leftButtonContainerStyle : rightButtonContainerStyle,
+      ]
 
       return (
         <Animated.View key={index} style={buttonStyle}>
           {buttonContent}
         </Animated.View>
-      );
-    });
+      )
+    })
   }
 
   render() {
@@ -771,22 +768,22 @@ export default class Swipeable extends PureComponent {
       onPress,
       onLongPress,
       ...props
-    } = this.props;
-    const { pan, width } = this.state;
-    const canSwipeLeft = this._canSwipeLeft();
-    const canSwipeRight = this._canSwipeRight();
+    } = this.props
+    const { pan, width } = this.state
+    const canSwipeLeft = this._canSwipeLeft()
+    const canSwipeRight = this._canSwipeRight()
     const transform = [
       {
         translateX: pan.x.interpolate({
           inputRange: [canSwipeLeft ? -width : 0, canSwipeRight ? width : 0],
           outputRange: [
             canSwipeLeft ? -width + StyleSheet.hairlineWidth : 0,
-            canSwipeRight ? width - StyleSheet.hairlineWidth : 0
+            canSwipeRight ? width - StyleSheet.hairlineWidth : 0,
           ],
-          extrapolate: "clamp"
-        })
-      }
-    ];
+          extrapolate: 'clamp',
+        }),
+      },
+    ]
 
     return (
       <View
@@ -832,9 +829,9 @@ export default class Swipeable extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "row"
+    flexDirection: 'row',
   },
   content: {
-    flex: 1
-  }
-});
+    flex: 1,
+  },
+})
