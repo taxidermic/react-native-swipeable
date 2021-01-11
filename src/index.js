@@ -789,41 +789,43 @@ export default class Swipeable extends PureComponent {
     ];
 
     return (
-      <TouchableWithoutFeedback onPress={onPress} onLongPress={onLongPress} style={styles.container}>
-        <View
-          onLayout={this._handleLayout}
-          style={[styles.container, style]}
-          {...this._panResponder.panHandlers}
-          {...props}
-        >
-          {canSwipeRight && (
+      <View
+        onLayout={this._handleLayout}
+        style={[styles.container, style]}
+        {...this._panResponder.panHandlers}
+        {...props}
+      >
+        <TouchableWithoutFeedback onPress={onPress} onLongPress={onLongPress} style={styles.container}>
+          <View style={[styles.container, style]}>
+            {canSwipeRight && (
+              <Animated.View
+                style={[
+                  { transform, marginLeft: -width, width },
+                  leftContainerStyle,
+                ]}
+              >
+                {leftContent || this._renderButtons(leftButtons, true)}
+              </Animated.View>
+            )}
             <Animated.View
-              style={[
-                { transform, marginLeft: -width, width },
-                leftContainerStyle
-              ]}
+              style={[{ transform }, styles.content, contentContainerStyle]}
             >
-              {leftContent || this._renderButtons(leftButtons, true)}
+              {children}
             </Animated.View>
-          )}
-          <Animated.View
-            style={[{ transform }, styles.content, contentContainerStyle]}
-          >
-            {children}
-          </Animated.View>
-          {canSwipeLeft && (
-            <Animated.View
-              style={[
-                { transform, marginRight: -width, width },
-                rightContainerStyle
-              ]}
-            >
-              {rightContent || this._renderButtons(rightButtons, false)}
-            </Animated.View>
-          )}
-        </View>
-      </TouchableWithoutFeedback>
-    );
+            {canSwipeLeft && (
+              <Animated.View
+                style={[
+                  { transform, marginRight: -width, width },
+                  rightContainerStyle,
+                ]}
+              >
+                {rightContent || this._renderButtons(rightButtons, false)}
+              </Animated.View>
+            )}
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
+    )
   }
 }
 
